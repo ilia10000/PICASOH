@@ -8,6 +8,9 @@ Created on Sat Nov 26 11:25:52 2016
 import cv2
 from PIL import Image
 import os
+
+img_dirs=['Apple_logo', 'Balloons', 'Chair', 'Elon_Musk', 'iPhone', 'Pancakes', 'Pepe', 'Pepsican', 'Water_bottle']
+
 def get_image_list(directory):
     contents = os.listdir(directory)
     return contents
