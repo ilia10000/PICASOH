@@ -9,6 +9,10 @@ import cv2
 from PIL import Image
 import os
 import pickle
+
+
+img_dirs=['Apple_logo', 'Balloons', 'Chair', 'Elon_Musk', 'iPhone', 'Pancakes', 'Pepe', 'Pepsican', 'Water_bottle']
+img_dirs=["Pepsican"]
 def get_image_list(directory):
     contents = os.listdir(directory)
     return contents
@@ -70,7 +74,7 @@ def read_hog(directory):
         hogs.append(pickle.load(directory+"/hogs/"+hog))
     return hogs
 def run_hog():
-    for directory in directories:
+    for directory in img_dirs:
         for filename in get_image_list(directory):
             h = calc_hog(directory,filename)
             write_hog(directory,filename,h)
