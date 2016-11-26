@@ -8,6 +8,7 @@ Created on Sat Nov 26 11:25:52 2016
 import cv2
 from PIL import Image
 import os
+import pickle
 def get_image_list(directory):
     contents = os.listdir(directory)
     return contents
@@ -42,7 +43,7 @@ def crop_contours(idy,filepath,cnts,width,height):
     image = cv2.imread(filepath)
     for c in cnts:
         x,y,w,h = cv2.boundingRect(c)
-        if w>width/20 and w<width/2 and h>height/5:
+        if w>width/10 and w<width/2 and h>height/5:
             idx+=1
             new_img=image[y:y+h,x:x+w]
             cv2.imwrite("contours/"+str(idy)+"_"+str(idx) + '.jpg', new_img)
@@ -53,7 +54,32 @@ def run_contours(filepath,idy):
     contours = get_contours(filepath,False)
     #show_contours(filepath,contours)
     crop_contours(idy,filepath,contours,width,height)
+def calc_hog(directory,filename):
+    filepath=directory+"/"+filename
+    hog = cv2.HOGDescriptor()
+    im = cv2.imread(filepath)
+    h = hog.compute(im)
+    return h
+def write_hog(directory,filename,h):
+    filepath=directory+"/"+"hogs/"+ filename[:filename.find(".")]+".py"
+    pickle.dump(h,filename)
+    return filepath
+def read_hog(directory):
+    hogs=[]
+    for hog in get_image_list(directory+"/hogs"):
+        hogs.append(pickle.load(directory+"/hogs/"+hog))
+    return hogs
+def run_hog():
+    for directory in directories:
+        for filename in get_image_list(directory):
+            h = calc_hog(directory,filename)
+            write_hog(directory,filename,h)
+        print read_hog(directory)
+    
+        
+'''
 idy = 0
 for filepath in get_image_list("photos"):
     idy+=1
     run_contours("photos/"+filepath,idy)   
+'''
