@@ -7,6 +7,10 @@ Created on Sat Nov 26 11:25:52 2016
 
 import cv2
 from PIL import Image
+import os
+def get_image_list(directory):
+    contents = os.listdir(directory)
+    return contents
 def get_contours(filepath, show):
     #reading the image 
     image = cv2.imread(filepath)
@@ -33,20 +37,23 @@ def show_contours(filepath,cnts):
         cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
     cv2.imshow("Output", image)
     cv2.waitKey(0)
-def crop_contours(filepath,cnts,width,height):
+def crop_contours(idy,filepath,cnts,width,height):
+    idx=0
     image = cv2.imread(filepath)
-    idx = 0
     for c in cnts:
         x,y,w,h = cv2.boundingRect(c)
-        if w>width/20 and h>height/20:
+        if w>width/20 and w<width/2 and h>height/5:
             idx+=1
             new_img=image[y:y+h,x:x+w]
-            cv2.imwrite(str(idx) + '.png', new_img)
-def run_contours(filepath):
+            cv2.imwrite("contours/"+str(idy)+"_"+str(idx) + '.jpg', new_img)
+def run_contours(filepath,idy):
     im=Image.open(filepath)
     width,height=im.size
     im.close()
     contours = get_contours(filepath,False)
     #show_contours(filepath,contours)
-    crop_contours(filepath,contours,width,height)
-run_contours("image.jpg")    
+    crop_contours(idy,filepath,contours,width,height)
+idy = 0
+for filepath in get_image_list("photos"):
+    idy+=1
+    run_contours("photos/"+filepath,idy)   
