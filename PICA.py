@@ -33,7 +33,8 @@ def show_contours(filepath,cnts):
         cv2.drawContours(image, [approx], -1, (0, 255, 0), 2)
     cv2.imshow("Output", image)
     cv2.waitKey(0)
-def crop_contours(filepath,cnts,width,height)
+def crop_contours(filepath,cnts,width,height):
+    image = cv2.imread(filepath)
     idx = 0
     for c in cnts:
         x,y,w,h = cv2.boundingRect(c)
@@ -41,11 +42,11 @@ def crop_contours(filepath,cnts,width,height)
             idx+=1
             new_img=image[y:y+h,x:x+w]
             cv2.imwrite(str(idx) + '.png', new_img)
-def run(filepath):
+def run_contours(filepath):
     im=Image.open(filepath)
     width,height=im.size
     im.close()
     contours = get_contours(filepath,False)
     #show_contours(filepath,contours)
     crop_contours(filepath,contours,width,height)
-    
+run_contours("image.jpg")    
