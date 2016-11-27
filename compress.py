@@ -1,6 +1,7 @@
 import numpy
 import cv2
 import sys
+from cat_detector import getcats
 
 def getavgcolour(imgname):
     img = cv2.imread(imgname)
@@ -10,7 +11,7 @@ def getavgcolour(imgname):
     
 imgname = sys.argv[0]
 
-objects = getcats() # Ilia's API. Return list of dictionaries {name: , rect: []}  
+objects = getcats(imgname) # Ilia's API. Return list of tuples (name , rect)     rect = [x,y,w,h]
 
 avgcolour = getavgcolour(imgname)
 height, width = img.shape
@@ -23,8 +24,8 @@ f.write(avgcolour + '\n')
 f.write('-----')
 
 for o in objects:
-    f.write(o['name'] + '\n')
-    f.write(o['rect'] + '\n')
+    f.write(o[0] + '\n')
+    f.write(o[1]+ '\n')
     
 f.close()
 
