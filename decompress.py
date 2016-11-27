@@ -2,10 +2,11 @@ import sys
 from PIL import Image
 
 filename = sys.argv[1]
-path_to_images = 'C:\Users\Sony\Desktop\TerribleHacks\Images'
+path_to_images = 'Images'
 
 f = open(filename)
 lines = f.read().split('\n')
+print(lines)
 f.close()
 
 # Read image properties
@@ -19,22 +20,27 @@ i = 0
 for line in lines[3:]:
     if i == 0:
         o = []
-        o[0] = line
+        o.append(line)
     elif i == 1:
-        o.append(line.split(','))
+        o.append(line)
         objects.append(o)
         i = -1
     i += 1
 
 # Build image
-im = Image.new('RGBA', imgsize, imgcolor)
+#im = Image.new('RGBA', imgsize, imgcolor)
+im = Image.new('RGBA', imgsize, "white")
 im.format = "PNG"
 
+print(objects)
+
 for o in objects:
-    ofilename = "{0}\{1}.png".format(path_to_images, o[0])
+    print(o)
+    ofilename = "{0}/{1}.png".format(path_to_images, o[0])
     oimg = Image.open(ofilename)
-    objx, objy = int(o[1][0]), int(o[1][1])
-    objwidth, objheight = int(o[1][2]), int(o[1][3])
+    rect = o[1].replace('[', '').replace(']', '').split()
+    objx, objy = int(rect[0]), int(rect[1])
+    objwidth, objheight = int(rect[2]), int(rect[3])
     oimg = oimg.resize((objwidth, objheight))
     region = (objx, objy, objx + objwidth, objy + objheight)
     im.paste(oimg, region, oimg)
